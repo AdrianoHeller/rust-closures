@@ -10,7 +10,8 @@ fn main() {
     });
 
     let week_one = Training::new(USER_SPECIFIED_VALUE,random_token);
-    println!("{:#?}",week_one);
+
+    week_one.generate_workout();
 
 }
 
