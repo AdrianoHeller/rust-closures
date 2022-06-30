@@ -7,6 +7,7 @@ use std::thread;
 use std::time;
 use chrono::{DateTime, Utc};
 use rand::{thread_rng,Rng};
+use crate::cacher::Cacher;
 
 pub const USER_SPECIFIED_VALUE: u32 = 10;
 
@@ -62,23 +63,21 @@ impl Training {
         random_num
     }
     pub fn generate_workout(&self) -> Result<(),String> {
-        let expensive_calc = |num| {
+        let mut expensive_calc = Cacher::new(|num| {
             println!("calculating slowly...");
             thread::sleep(time::Duration::from_secs(2));
             num
-        };
-
-        let val: u32 = expensive_calc(self.user_spec_val);
+        });
 
         if self.user_spec_val < 25 {
-            println!("Today do: {} push-ups!",val);
-            println!("Next do: {} sit-ups!",val);
+            println!("Today do: {} push-ups!",expensive_calc.value(self.user_spec_val));
+            println!("Next do: {} sit-ups!",expensive_calc.value(self.user_spec_val));
             Ok(())
         } else {
             if self.random_int == 2 { Err(String::from("You have trained hard, so far. Please rest today.")) }
             else if self.random_int > 5 { Err(String::from("The doctor does not recommend you to train this week.")) }
             else {
-                println!("Just run: {} miles",val);
+                println!("Just run: {} miles",expensive_calc.value(self.user_spec_val));
                 Ok(())
             }
         }
@@ -97,6 +96,8 @@ mod tests {
         });
 
         let week_one = Training::new(USER_SPECIFIED_VALUE,random_token);
+
+        week_one.generate_workout();
 
         println!("{:#?}",week_one);
 
