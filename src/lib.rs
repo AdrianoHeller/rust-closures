@@ -1,3 +1,5 @@
+mod cacher;
+
 use std::env;
 use std::error::Error;
 use std::process;
