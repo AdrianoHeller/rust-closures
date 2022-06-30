@@ -36,7 +36,7 @@ impl Training {
         }
     }
     pub fn generate_token_id(token_length: usize) -> Result<String,Box<dyn Error>> {
-        let chars_list = String::from("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-_.");
+        let chars_list = String::from("abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-.");
         let mut random_thread = thread_rng();
         let mut chars: Vec<u8> = vec![];
         loop {
